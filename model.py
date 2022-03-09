@@ -67,7 +67,7 @@ class Seq2SeqTransformer(nn.Module):
             num_decoder_layers=num_decoder_layers,
             dim_feedforward=dim_feedforward,
             dropout=dropout,
-            activation=nn.GELU(),
+            activation=nn.GELU(),  # activation function may vary from paper
         )
 
         self.generator = nn.Linear(emb_size, tgt_vocab_size)
