@@ -2,6 +2,24 @@
 
 Minimal Implementation of Paper [Deep Encoder, Shallow Decoder](https://arxiv.org/abs/2006.10369) using Pytorch nn.Transformer and Huggingface Tokenizer.
 
+
+
+### Ko-En Translation Example [BLEU WIP]
+
+Source (Korean)
+
+```
+그러나 결국 학생을 선발하는 현 교육제도에서, 영어를 절대평가로 한다고 해서 과연 사교육 시장의 팽창이 주춤할지 의문입니다.
+```
+
+Target (English)
+
+```
+[CLS] However it is doub ##t ##ful whether the expansion of the private education market will slow down because the absolute evaluation of the current education system which select ##s students
+```
+
+
+
 ## Model
 
 Sequence to Sequence Transformer model using [nn.Transformer](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
@@ -55,10 +73,19 @@ Parallel corpus shape of source langauge and target language pairs.
 
 Maximum Token Length was selected as 62 which is 95% percentile of the target dataset.
 
-- Source Language(Korean) Token Length Distribution
-  ![korean-distribution](assets/korean-distribution.png)
-- Target Language(English) Token Length Distribution
-  ![english-distribution](assets/english-distribution.png)
+| Source Language(Korean) Token Length Distribution | Target Language(English) Token Length Distribution |
+| ------------------------------------------------------------ | ------------------------------------------------- |
+| ![korean-distribution](assets/korean-distribution.png) | ![english-distribution](assets/english-distribution.png) |
+
+
+
+## TO-DO
+
+- Knowledge distllation is yet to be applied
+- Get BLEU score from test set
+- Package seq2seq transformer model and upload to huggingface hub 
+
+
 
 ## Citation
 
