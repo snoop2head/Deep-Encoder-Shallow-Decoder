@@ -86,7 +86,7 @@ Maximum Token Length was selected as 62 which is 95% percentile of the target da
 - [x] Package seq2seq transformer model to huggingface hub.
 - [ ] Make Machine Translation Model class similar to MarianMTModel in order to be trainable with huggingface trainer.
 - [ ] Get BLEU score from the test set.
-- [ ] Compare BLEU score from Google Translate, Papago, Pororo on the test set.
+- [ ] Compare BLEU score from Google Translate, Papago, [Pororo](https://kakaobrain.github.io/pororo/seq2seq/mt.html) on the test set(or test set which is out of domain).
 - [ ] For tasks such as Named Entity Relation or Relation Extraction, enable entity marker to wrap around even after translation
 
 ## Citation
