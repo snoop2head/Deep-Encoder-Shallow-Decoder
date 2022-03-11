@@ -1,6 +1,6 @@
-from config import CFG
+from config import DeepShallowConfig, CFG
 from tokenizer import korean_tokenizer, english_tokenizer
-from model import PositionalEncoding, TokenEmbedding, Seq2SeqTransformer
+from model import DeepShallowModel
 from dataset import train_dataloader, val_dataloader
 from metrics import AverageMetrics
 
@@ -47,16 +47,7 @@ if __name__ == "__main__":
     except:
         pass
 
-    transformer = Seq2SeqTransformer(
-        num_encoder_layers=CFG.NUM_ENCODER_LAYERS,
-        num_decoder_layers=CFG.NUM_DECODER_LAYERS,
-        emb_size=CFG.EMB_SIZE,
-        nhead=CFG.NHEAD,
-        src_vocab_size=CFG.SRC_VOCAB_SIZE,
-        tgt_vocab_size=CFG.TGT_VOCAB_SIZE,
-        dim_feedforward=CFG.FFN_HID_DIM,
-        dropout=CFG.dropout_rate,
-    )
+    transformer = DeepShallowModel(config=DeepShallowConfig())
 
     for p in transformer.parameters():
         if p.dim() > 1:
