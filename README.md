@@ -2,8 +2,6 @@
 
 Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org/abs/2006.10369) using Pytorch nn.Transformer and Huggingface Tokenizer.
 
-
-
 ### Ko ➡️ En Translation Example [BLEU WIP]
 
 **Source (Korean)**
@@ -18,11 +16,16 @@ Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org
 [CLS] However it is doub ##t ##ful whether the expansion of the private education market will slow down because the absolute evaluation of the current education system which select ##s students
 ```
 
-
-
 ## Model
 
-Sequence to Sequence Transformer model using [nn.Transformer](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
+- Sequence to Sequence Transformer model using [nn.Transformer](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
+- Packaged with Huggingface PretrainedModel Class
+
+  ```python
+  from transformers import AutoModel, AutoConfig
+  config = AutoConfig.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
+  model = AutoModel.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
+  ```
 
 | Model Hyperparameter                  | Value |
 | ------------------------------------- | ----- |
@@ -38,12 +41,12 @@ Sequence to Sequence Transformer model using [nn.Transformer](https://pytorch.or
 | Training Hyperparameter | Value            |
 | ----------------------- | ---------------- |
 | Train Batch Size        | 256              |
-| # Train Steps           | 190K             |
+| # Train Steps           | 150K             |
 | Optimizer               | AdamW            |
 | Learning Rate           | 5e-4             |
 | Weight decay rate       | 1e-2             |
 | Learning Rate Scheduler | Cosine Annealing |
-| # Warm-up Steps         | 1900             |
+| # Warm-up Steps         | 4700             |
 | Dropout rate            | 0.1              |
 | AdamW betas             | (0.9, 0.98)      |
 | Loss function           | CrossEntropy     |
@@ -54,14 +57,14 @@ Datasets were proviced by [AIHub](https://aihub.or.kr/aihub-data/natural-languag
 
 | Dataset Information                | Value        |
 | ---------------------------------- | ------------ |
-| Train set size (#pairs)            | 4.9 Million  |
+| Train set size (#pairs)            | 4.8 Million  |
 | Valid set size (#pairs)            | 0.1 Million  |
 | Test set size (#pairs)             | 0.1 Million  |
 | Tokenizer                          | WordPiece    |
 | Source Vocab Size                  | 10000        |
 | Target Vocab Size                  | 10000        |
-| Max token length                   | 62           |
-| Positional encoding maximum length | 62           |
+| Max token length                   | 64           |
+| Positional encoding maximum length | 64           |
 | Source Language                    | Korean (ko)  |
 | Target Language                    | English (en) |
 
@@ -73,19 +76,18 @@ Parallel corpus shape of source langauge and target language pairs.
 
 Maximum Token Length was selected as 62 which is 95% percentile of the target dataset.
 
-| Source Language(Korean) Token Length Distribution | Target Language(English) Token Length Distribution |
-| ------------------------------------------------------------ | ------------------------------------------------- |
+| Source Language(Korean) Token Length Distribution      | Target Language(English) Token Length Distribution       |
+| ------------------------------------------------------ | -------------------------------------------------------- |
 | ![korean-distribution](assets/korean-distribution.png) | ![english-distribution](assets/english-distribution.png) |
-
-
 
 ## TO-DO
 
-- Knowledge distllation is yet to be applied.
-- Get BLEU score from test set.
-- Package seq2seq transformer model and upload to huggingface hub.
-
-
+- [ ] Knowledge distllation is yet to be applied.
+- [x] Package seq2seq transformer model to huggingface hub.
+- [ ] Make Machine Translation Model class similar to MarianMTModel in order to be trainable with huggingface trainer.
+- [ ] Get BLEU score from the test set.
+- [ ] Compare BLEU score from Google Translate, Papago, Pororo on the test set.
+- [ ] For tasks such as Named Entity Relation or Relation Extraction, enable entity marker to wrap around even after translation
 
 ## Citation
 
