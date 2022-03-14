@@ -13,10 +13,11 @@ CFG:
   num_epochs: 10 # validation loss is increasing after 5 epochs
   max_token_length: 64
   stopwords: []
-  learning_rate: 5e-4
-  weight_decay: 1e-2 # https://paperswithcode.com/method/weight-decay
-  adam_betas: (0.9, 0.98)
-  epsilon: 1e-9
+  learning_rate: 0.0005 # has to be set as float explicitly due to https://stackoverflow.com/questions/30458977/yaml-loads-5e-6-as-string-and-not-a-number
+  weight_decay: 0.01 # https://paperswithcode.com/method/weight-decay
+  adam_beta_1: 0.9
+  adam_beta_2: 0.98
+  epsilon: 0.000000001
 
   # Translation settings
   src_vocab_size: 10000
@@ -28,4 +29,5 @@ CFG:
   ROOT_PATH: "."
 
   # set best model path
-  model_path: "./best-eval-loss-model-10-epochs.pt"
+  num_inference_sample: 500
+  load_model_name: "snoop2head/Deep-Shallow-Ko2En"

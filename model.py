@@ -1,14 +1,20 @@
 from config import DeepShallowConfig
-from tokenizer import korean_tokenizer, english_tokenizer
 
 import math
 import torch
 import torch.nn as nn
 from torch import Tensor
-from transformers import PreTrainedModel
+from transformers import PreTrainedModel, PreTrainedTokenizerFast
 
 # helper Module that adds positional encoding to the token embedding to introduce a notion of word order.
 # https://kazemnejad.com/blog/transformer_architecture_positional_encoding/
+
+korean_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-Ko")
+english_tokenizer = PreTrainedTokenizerFast.from_pretrained(
+    "snoop2head/Deep-Shallow-En"
+)
+
+
 class PositionalEncoding(nn.Module):
     """Reference
     MarianSinusoidalPositionalEmbedding:https://github.com/huggingface/transformers/blob/198c335d219a5eb4d3f124fdd1ce1a9cd9f78a9b/src/transformers/models/marian/modeling_marian.py#L109

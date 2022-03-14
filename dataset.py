@@ -1,6 +1,4 @@
-from preprocess import df_train, df_valid, df_test
-from tokenizer import korean_tokenizer, english_tokenizer
-
+from transformers import PreTrainedTokenizerFast
 import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader
@@ -11,8 +9,12 @@ import yaml
 # Read config.yaml file
 with open("config.yaml") as infile:
     SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
-CFG = EasyDict(SAVED_CFG["CFG"])
-###############################################################################
+    CFG = EasyDict(SAVED_CFG["CFG"])
+
+korean_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-Ko")
+english_tokenizer = PreTrainedTokenizerFast.from_pretrained(
+    "snoop2head/Deep-Shallow-En"
+)
 
 
 class TranslationDataset(Dataset):
@@ -117,22 +119,3 @@ def custom_collate_inference_fn(batch):
     print(torch.tensor(src_batch).size())
     src_batch = torch.transpose(torch.tensor(src_batch), 0, 1)
     return src_batch
-
-
-if __name__ == "__main__":
-    train_iter = TranslationDataset(df_train)
-    train_dataloader = DataLoader(
-        train_iter, batch_size=CFG.train_batch_size, collate_fn=custom_collate_fn
-    )
-
-    val_iter = TranslationDataset(df_valid)
-    val_dataloader = DataLoader(
-        val_iter, batch_size=CFG.valid_batch_size, collate_fn=custom_collate_fn
-    )
-
-    test_iter = TargetDataset(df_test)
-    test_dataloader = DataLoader(
-        test_iter,
-        batch_size=CFG.test_batch_size,
-        collate_fn=custom_collate_inference_fn,
-    )
