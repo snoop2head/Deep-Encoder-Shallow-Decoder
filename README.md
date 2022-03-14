@@ -27,11 +27,11 @@ english_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Sha
 
 # Korean(source) -> English(target) translation with pretrained model
 config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
-model = DeepShallowModel("snoop2head/Deep-Shallow-Ko2En", config=config)
+model = DeepShallowModel.from_pretrained("snoop2head/Deep-Shallow-Ko2En", config=config)
 
 # English(source) -> Korean(target) translation with pretrained model
 config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-En2Ko")
-model = DeepShallowModel("snoop2head/Deep-Shallow-En2Ko", config=config)
+model = DeepShallowModel.from_pretrained("snoop2head/Deep-Shallow-En2Ko", config=config)
 ```
 
 | Model Hyperparameter                  | Value |
