@@ -1,7 +1,14 @@
-from tokenizer import korean_tokenizer, english_tokenizer
-from model import Seq2SeqTransformer
+from config import DeepShallowConfig
+from preprocess import use_dataset
+from model import DeepShallowModel
 from trainer import generate_square_subsequent_mask
-from dataset import TargetDataset, test_iter, test_dataloader
+from dataset import TargetDataset, custom_collate_inference_fn
+
+import pandas as pd
+import numpy as np
+from tqdm import tqdm
+from torch.utils.data import Dataset, DataLoader
+from transformers import PreTrainedTokenizerFast
 
 import torch
 from easydict import EasyDict
@@ -10,11 +17,15 @@ import yaml
 # Read config.yaml file
 with open("config.yaml") as infile:
     SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
-CFG = EasyDict(SAVED_CFG["CFG"])
-###############################################################################
+    CFG = EasyDict(SAVED_CFG["CFG"])
 
 DEVICE = torch.device(
     "cuda:0" if torch.cuda.is_available() and CFG.DEBUG == False else "cpu"
+)
+
+korean_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-Ko")
+english_tokenizer = PreTrainedTokenizerFast.from_pretrained(
+    "snoop2head/Deep-Shallow-En"
 )
 
 # function to generate output sequence using greedy algorithm
@@ -43,40 +54,67 @@ def greedy_decode(model, src, src_mask, max_len, start_symbol):
     return ys
 
 
-if __name__ == "__main__":
-    transformer = Seq2SeqTransformer(
-        num_encoder_layers=CFG.NUM_ENCODER_LAYERS,
-        num_decoder_layers=CFG.NUM_DECODER_LAYERS,
-        emb_size=CFG.EMB_SIZE,
-        nhead=CFG.NHEAD,
-        src_vocab_size=CFG.SRC_VOCAB_SIZE,
-        tgt_vocab_size=CFG.TGT_VOCAB_SIZE,
-        dim_feedforward=CFG.FFN_HID_DIM,
-        dropout=CFG.dropout_rate,
-    )
-
-    sample_id = 1000
-    transformer.load_state_dict(torch.load(CFG.model_path))
-    transformer.eval()
-    src_input_id = TargetDataset(test_iter)[sample_id].view(-1, 1)
+def inference(transformer, src_input_id):
+    # find the index where first pad_token_id appears in src_input_id
     num_tokens = src_input_id.shape[0]
+    pad_token_id = korean_tokenizer.pad_token_id
+
+    # get index of the last True
+    src_mask = (src_input_id != pad_token_id).squeeze()
+    num_tokens_without_pad = src_mask.sum().item() - 1
+
     src_mask = (torch.zeros(num_tokens, num_tokens)).type(torch.bool)
-
-    print(src_input_id)
-    print(num_tokens)
-    print(src_mask)
-
+    transformer.eval()
     tgt_tokens = greedy_decode(
         transformer,
         src_input_id,
         src_mask,
-        max_len=CFG.max_token_length,
+        max_len=num_tokens_without_pad,
         start_symbol=korean_tokenizer.cls_token_id,
     ).flatten()
 
-    translated_sentence = " ".join(
-        english_tokenizer.convert_ids_to_tokens(tgt_tokens.tolist())
-    )
+    result = " ".join(english_tokenizer.convert_ids_to_tokens(tgt_tokens))
+    result = result.replace(" ##", "")
+    result = result.replace("[UNK]", "")
+    result = result.replace("[CLS]", "")
+    return result
 
-    print(korean_tokenizer.decode(test_iter[0][sample_id]))
-    print(translated_sentence)
+
+if __name__ == "__main__":
+    _, _, df_test = use_dataset()
+    print(df_test.head(2))
+
+    list_inferenced = []
+    slice_index = CFG.num_inference_sample - 1
+
+    list_test = df_test["ko"].tolist()[:slice_index]
+    list_answer = df_test["en"].tolist()[:slice_index]
+
+    test_dataset = TargetDataset(list_test)
+
+    # test_dataloader = DataLoader(
+    #     test_dataset,
+    #     batch_size=CFG.valid_batch_size,
+    #     collate_fn=custom_collate_inference_fn,
+    # )
+
+    config = DeepShallowConfig.from_pretrained(CFG.load_model_name)
+    transformer = DeepShallowModel(config).to(DEVICE)
+
+    for index_num, item in enumerate(tqdm(test_dataset)):
+        src_input_id = item.view(-1, 1)
+        result = inference(transformer, src_input_id)
+        list_inferenced.append(result)
+        if index_num == slice_index:
+            break
+
+    df_result = pd.DataFrame(
+        {
+            "ko": list_test,
+            "pred": list_inferenced,
+            "en": list_answer,
+        }
+    )
+    df_result.to_csv(
+        f"./data/inference_first_{CFG.num_inference_sample}.csv", index=False
+    )

@@ -1,15 +1,16 @@
-from tokenizer import korean_tokenizer, english_tokenizer
+from preprocess import use_dataset
 from config import DeepShallowConfig
 from model import DeepShallowModel
-from dataset import train_dataloader, val_dataloader
 from metrics import AverageMetrics
+from dataset import TranslationDataset, custom_collate_fn
 
 import torch
 
 import torch.nn as nn
 from torch.optim import AdamW
+from torch.utils.data import DataLoader
 from tqdm.notebook import tqdm
-from transformers import get_cosine_schedule_with_warmup
+from transformers import PreTrainedTokenizerFast, get_cosine_schedule_with_warmup
 
 from easydict import EasyDict
 import yaml
@@ -17,11 +18,15 @@ import yaml
 # Read config.yaml file
 with open("config.yaml") as infile:
     SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
-CFG = EasyDict(SAVED_CFG["CFG"])
-###############################################################################
+    CFG = EasyDict(SAVED_CFG["CFG"])
 
 DEVICE = torch.device(
     "cuda:0" if torch.cuda.is_available() and CFG.DEBUG == False else "cpu"
+)
+
+korean_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-Ko")
+english_tokenizer = PreTrainedTokenizerFast.from_pretrained(
+    "snoop2head/Deep-Shallow-En"
 )
 
 
@@ -59,6 +64,17 @@ if __name__ == "__main__":
     except:
         pass
 
+    df_train, df_valid, _ = use_dataset()
+    train_iter = TranslationDataset(df_train)
+    train_dataloader = DataLoader(
+        train_iter, batch_size=CFG.train_batch_size, collate_fn=custom_collate_fn
+    )
+
+    val_iter = TranslationDataset(df_valid)
+    val_dataloader = DataLoader(
+        val_iter, batch_size=CFG.valid_batch_size, collate_fn=custom_collate_fn
+    )
+
     transformer = DeepShallowModel(config=DeepShallowConfig())
 
     for p in transformer.parameters():
@@ -72,7 +88,7 @@ if __name__ == "__main__":
         transformer.parameters(),
         lr=CFG.learning_rate,
         weight_decay=CFG.weight_decay,
-        betas=CFG.adam_betas,
+        betas=(CFG.adam_beta_1, CFG.adam_beta_2),
         eps=CFG.epsilon,
     )
 

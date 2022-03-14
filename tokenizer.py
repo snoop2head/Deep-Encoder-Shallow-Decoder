@@ -1,26 +1,24 @@
 import os
 
-from preprocess import train
-
-from datasets import load_dataset
+from preprocess import fetch_raw_dataset
 from tokenizers import Tokenizer
 from tokenizers.models import BPE, WordPiece
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import BpeTrainer, WordPieceTrainer
-from transformers import PreTrainedTokenizerFast, AutoTokenizer
+from transformers import PreTrainedTokenizerFast
 from easydict import EasyDict
 import yaml
 
 # Read config.yaml file
 with open("config.yaml") as infile:
     SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
-CFG = EasyDict(SAVED_CFG["CFG"])
-###############################################################################
+    CFG = EasyDict(SAVED_CFG["CFG"])
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 SPECIAL_TOKENS = ["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]"]
 
 if CFG.TRAIN_TOKENIZER:
+    train, _, _ = fetch_raw_dataset()
     """Train tokenizer from scratch and upload to huggingface hub"""
     korean_sentences = list(train["ko"].values)
     english_sentences = list(train["en"].values)
@@ -80,11 +78,3 @@ if CFG.TRAIN_TOKENIZER:
     # save tokenizer on huggingface hub
     korean_tokenizer.push_to_hub("snoop2head/Deep-Shallow-Ko", use_temp_dir=True)
     english_tokenizer.push_to_hub("snoop2head/Deep-Shallow-En", use_temp_dir=True)
-
-if not CFG.TRAIN_TOKENIZER:
-    """fetch tokenizer from huggingface hub"""
-    korean_tokenizer = AutoTokenizer.from_pretrained("snoop2head/Deep-Shallow-Ko")
-    english_tokenizer = AutoTokenizer.from_pretrained("snoop2head/Deep-Shallow-En")
-
-    print(korean_tokenizer.vocab_size)
-    print(english_tokenizer.vocab_size)
