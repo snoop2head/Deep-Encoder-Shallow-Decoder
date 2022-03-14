@@ -1,13 +1,16 @@
 # Deep Encoder Shallow Decoder
 
-Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org/abs/2006.10369) using Pytorch nn.Transformer and Huggingface Tokenizer.
+Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org/abs/2006.10369) with Pytorch nn.Transformer and Huggingface Tokenizer.
 
 ## BLEU Score and Translation Examples
 
-|         |                                                        Korean ➡️ English                                                        | English ➡️ Korean |
-| ------- | :-----------------------------------------------------------------------------------------------------------------------------: | :---------------: |
-| BLEU    |                                                              35.82                                                              |         -         |
-| Example | [🔗 Translation Result](https://docs.google.com/spreadsheets/d/1IqEuRuEpphPEX3ni1m0EwqYuOU4E4t4-jC6uullpJhE/edit#gid=204599913) |         -         |
+|                      |                       Korean ➡️ English                       | English ➡️ Korean |
+| -------------------- | :----------------------------------------------------------: | :--------------: |
+| BLEU                 |                            35.82                             |        -         |
+| Example              | [🔗 Translation Result](https://docs.google.com/spreadsheets/d/1IqEuRuEpphPEX3ni1m0EwqYuOU4E4t4-jC6uullpJhE/edit#gid=204599913) |        -         |
+| CPU Inference Time** |                     4.5 sentences / sec                      |        -         |
+
+**Tested with `2.4 GHz 8-Core Intel Core i9`
 
 ## Model
 
@@ -24,11 +27,11 @@ english_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Sha
 
 # Korean(source) -> English(target) translation with pretrained model
 config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
-model = DeepShallowModel(config)
+model = DeepShallowModel("snoop2head/Deep-Shallow-Ko2En", config=config)
 
 # English(source) -> Korean(target) translation with pretrained model
-config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-En2Ko") 
-model = DeepShallowModel(config)
+config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-En2Ko")
+model = DeepShallowModel("snoop2head/Deep-Shallow-En2Ko", config=config)
 ```
 
 | Model Hyperparameter                  | Value |

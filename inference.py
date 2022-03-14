@@ -99,8 +99,7 @@ if __name__ == "__main__":
     # )
 
     config = DeepShallowConfig.from_pretrained(CFG.load_model_name)
-    transformer = DeepShallowModel(config)
-    transformer.load_state_dict(torch.load(CFG.load_model_path, map_location=DEVICE))
+    transformer = DeepShallowModel.from_pretrained(CFG.load_model_name, config=config)
     transformer = transformer.to(DEVICE)
 
     for index_num, item in enumerate(tqdm(test_dataset)):
