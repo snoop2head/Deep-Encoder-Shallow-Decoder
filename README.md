@@ -2,30 +2,30 @@
 
 Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org/abs/2006.10369) using Pytorch nn.Transformer and Huggingface Tokenizer.
 
-### Ko ➡️ En Translation Example [BLEU WIP]
+## BLEU Score and Translation Examples
 
-**Source (Korean)**
-
-```
-그러나 결국 학생을 선발하는 현 교육제도에서, 영어를 절대평가로 한다고 해서 과연 사교육 시장의 팽창이 주춤할지 의문입니다.
-```
-
-**Target (English)**
-
-```
-[CLS] However it is doub ##t ##ful whether the expansion of the private education market will slow down because the absolute evaluation of the current education system which select ##s students
-```
+|         |                                                        Korean ➡️ English                                                        | English ➡️ Korean |
+| ------- | :-----------------------------------------------------------------------------------------------------------------------------: | :---------------: |
+| BLEU    |                                                              35.82                                                              |         -         |
+| Example | [🔗 Translation Result](https://docs.google.com/spreadsheets/d/1IqEuRuEpphPEX3ni1m0EwqYuOU4E4t4-jC6uullpJhE/edit#gid=204599913) |         -         |
 
 ## Model
 
 - Sequence to Sequence Transformer model using [nn.Transformer](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
 - Packaged with Huggingface PretrainedModel Class
 
-  ```python
-  from transformers import AutoModel, AutoConfig
-  config = AutoConfig.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
-  model = AutoModel.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
-  ```
+```python
+from transformers import PreTrainedTokenizerFast
+from model import DeepShallowModel, DeepShallowConfig
+
+# pretrained config and model
+config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
+model = DeepShallowModel.from_pretrained("snoop2head/Deep-Shallow-Ko2En") # or "snoop2head/Deep-Shallow-En2Ko"
+
+# source and target tokenizer
+korean_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-Ko")
+english_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-En")
+```
 
 | Model Hyperparameter                  | Value |
 | ------------------------------------- | ----- |
