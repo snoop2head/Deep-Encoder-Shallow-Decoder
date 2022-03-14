@@ -3,5 +3,5 @@ __pycache__
 .DS_Store
 *.pt
 *.ipynb
-*.csv
 _clones/*
+data/inference_first_5000.csv
