@@ -4,4 +4,5 @@ datasets==1.18.4
 pandas
 numpy
 wandb
+yaml
 easydict

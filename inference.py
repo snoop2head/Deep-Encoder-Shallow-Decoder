@@ -1,24 +1,35 @@
-from config import CFG
 from tokenizer import korean_tokenizer, english_tokenizer
 from model import Seq2SeqTransformer
 from trainer import generate_square_subsequent_mask
 from dataset import TargetDataset, test_iter, test_dataloader
 
 import torch
+from easydict import EasyDict
+import yaml
+
+# Read config.yaml file
+with open("config.yaml") as infile:
+    SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
+CFG = EasyDict(SAVED_CFG["CFG"])
+###############################################################################
+
+DEVICE = torch.device(
+    "cuda:0" if torch.cuda.is_available() and CFG.DEBUG == False else "cpu"
+)
 
 # function to generate output sequence using greedy algorithm
 # Greedy Search: Greedy search simply selects the word with the highest probability as its next word
 # https://huggingface.co/blog/how-to-generate
 def greedy_decode(model, src, src_mask, max_len, start_symbol):
-    src = src.to(CFG.Device)
-    src_mask = src_mask.to(CFG.Device)
+    src = src.to(DEVICE)
+    src_mask = src_mask.to(DEVICE)
 
     memory = model.encode(src, src_mask)
-    ys = torch.ones(1, 1).fill_(start_symbol).type(torch.long).to(CFG.Device)
+    ys = torch.ones(1, 1).fill_(start_symbol).type(torch.long).to(DEVICE)
     for i in range(max_len - 1):
-        memory = memory.to(CFG.Device)
+        memory = memory.to(DEVICE)
         tgt_mask = (generate_square_subsequent_mask(ys.size(0)).type(torch.bool)).to(
-            CFG.Device
+            DEVICE
         )
         out = model.decode(ys, memory, tgt_mask)
         out = out.transpose(0, 1)

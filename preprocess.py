@@ -1,9 +1,16 @@
-from config import CFG
 from tokenizer import korean_tokenizer, english_tokenizer
 
 import pandas as pd
 import numpy as np
 from datasets import Dataset, DatasetDict, load_dataset
+from easydict import EasyDict
+import yaml
+
+# Read config.yaml file
+with open("config.yaml") as infile:
+    SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
+CFG = EasyDict(SAVED_CFG["CFG"])
+###############################################################################
 
 
 def preprocess(df_input: pd.DataFrame) -> pd.DataFrame:

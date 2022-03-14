@@ -41,7 +41,7 @@ english_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Sha
 | Training Hyperparameter | Value            |
 | ----------------------- | ---------------- |
 | Train Batch Size        | 256              |
-| # Train Steps           | 150K             |
+| # Train Steps           | 190K             |
 | Optimizer               | AdamW            |
 | Learning Rate           | 5e-4             |
 | Weight decay rate       | 1e-2             |
@@ -84,8 +84,8 @@ Maximum Token Length was selected as 62 which is 95% percentile of the target da
 
 - [ ] Knowledge distllation is yet to be applied.
 - [x] Package seq2seq transformer model to huggingface hub.
-- [ ] Make Machine Translation Model class similar to MarianMTModel in order to be trainable with huggingface trainer.
-- [ ] Get BLEU score from the test set.
+- [x] Make Machine Translation Model class similar to MarianMTModel in order to be trainable with huggingface trainer.
+- [x] Get BLEU score from the test set.
 - [ ] Compare BLEU score from Google Translate, Papago, [Pororo](https://kakaobrain.github.io/pororo/seq2seq/mt.html) on the test set(or test set which is out of domain).
 - [ ] For tasks such as Named Entity Relation or Relation Extraction, enable entity marker to wrap around even after translation
 

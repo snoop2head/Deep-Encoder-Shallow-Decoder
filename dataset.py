@@ -1,10 +1,18 @@
-from config import CFG
 from preprocess import df_train, df_valid, df_test
 from tokenizer import korean_tokenizer, english_tokenizer
 
 import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader
+
+from easydict import EasyDict
+import yaml
+
+# Read config.yaml file
+with open("config.yaml") as infile:
+    SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
+CFG = EasyDict(SAVED_CFG["CFG"])
+###############################################################################
 
 
 class TranslationDataset(Dataset):

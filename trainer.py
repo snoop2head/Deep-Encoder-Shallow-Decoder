@@ -1,18 +1,32 @@
-from config import DeepShallowConfig, CFG
 from tokenizer import korean_tokenizer, english_tokenizer
+from config import DeepShallowConfig
 from model import DeepShallowModel
 from dataset import train_dataloader, val_dataloader
 from metrics import AverageMetrics
 
 import torch
+
 import torch.nn as nn
 from torch.optim import AdamW
 from tqdm.notebook import tqdm
 from transformers import get_cosine_schedule_with_warmup
 
+from easydict import EasyDict
+import yaml
+
+# Read config.yaml file
+with open("config.yaml") as infile:
+    SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
+CFG = EasyDict(SAVED_CFG["CFG"])
+###############################################################################
+
+DEVICE = torch.device(
+    "cuda:0" if torch.cuda.is_available() and CFG.DEBUG == False else "cpu"
+)
+
 
 def generate_square_subsequent_mask(sz):
-    mask = (torch.triu(torch.ones((sz, sz), device=CFG.DEVICE)) == 1).transpose(0, 1)
+    mask = (torch.triu(torch.ones((sz, sz), device=DEVICE)) == 1).transpose(0, 1)
     mask = (
         mask.float()
         .masked_fill(mask == 0, float("-inf"))
@@ -26,9 +40,7 @@ def create_mask(src, tgt):
     tgt_seq_len = tgt.shape[0]
 
     tgt_mask = generate_square_subsequent_mask(tgt_seq_len)
-    src_mask = torch.zeros((src_seq_len, src_seq_len), device=CFG.DEVICE).type(
-        torch.bool
-    )
+    src_mask = torch.zeros((src_seq_len, src_seq_len), device=DEVICE).type(torch.bool)
     # sequence length x sequence length matrix
     # intialized all to False -> just to match target mask which is to prevent decoder to cheat in autoregressive training
 
@@ -53,7 +65,7 @@ if __name__ == "__main__":
         if p.dim() > 1:
             nn.init.xavier_uniform_(p)
 
-    transformer = transformer.to(CFG.DEVICE)
+    transformer = transformer.to(DEVICE)
 
     loss_fn = nn.CrossEntropyLoss(ignore_index=english_tokenizer.pad_token_id)
     optimizer = AdamW(
@@ -84,8 +96,8 @@ if __name__ == "__main__":
     # Train and Validation iteration
     for epoch in range(1, CFG.num_epochs + 1):
         for num_steps, (src, tgt) in enumerate(tqdm(train_dataloader)):
-            src = src.to(CFG.DEVICE)
-            tgt = tgt.to(CFG.DEVICE)
+            src = src.to(DEVICE)
+            tgt = tgt.to(DEVICE)
 
             transformer.train()
 
@@ -124,8 +136,8 @@ if __name__ == "__main__":
                 transformer.eval()
 
                 for src, tgt in tqdm(val_dataloader):
-                    src = src.to(CFG.DEVICE)
-                    tgt = tgt.to(CFG.DEVICE)
+                    src = src.to(DEVICE)
+                    tgt = tgt.to(DEVICE)
 
                     tgt_input = tgt[:-1, :]
 
