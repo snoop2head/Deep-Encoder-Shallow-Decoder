@@ -4,13 +4,13 @@ Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org
 
 ## BLEU Score and Translation Examples
 
-|                      |                       Korean ➡️ English                       | English ➡️ Korean |
-| -------------------- | :----------------------------------------------------------: | :--------------: |
-| BLEU                 |                            35.82                             |        -         |
-| Example              | [🔗 Translation Result](https://docs.google.com/spreadsheets/d/1IqEuRuEpphPEX3ni1m0EwqYuOU4E4t4-jC6uullpJhE/edit#gid=204599913) |        -         |
-| CPU Inference Time** |                     4.5 sentences / sec                      |        -         |
+|                        |                                                        Korean ➡️ English                                                        | English ➡️ Korean |
+| ---------------------- | :-----------------------------------------------------------------------------------------------------------------------------: | :---------------: |
+| BLEU                   |                                                              35.82                                                              |         -         |
+| Example                | [🔗 Translation Result](https://docs.google.com/spreadsheets/d/1IqEuRuEpphPEX3ni1m0EwqYuOU4E4t4-jC6uullpJhE/edit#gid=204599913) |         -         |
+| CPU Inference Time\*\* |                                                       4.5 sentences / sec                                                       |         -         |
 
-**Tested with `2.4 GHz 8-Core Intel Core i9`
+\*\*Tested with `2.4 GHz 8-Core Intel Core i9`
 
 ## Model
 

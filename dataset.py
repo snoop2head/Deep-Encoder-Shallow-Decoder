@@ -39,8 +39,15 @@ class TranslationDataset(Dataset):
         source_sent = self.df_input.iloc[idx][self.source_language]
         target_sent = self.df_input.iloc[idx][self.target_language]
 
+        source_tokenizer = (
+            korean_tokenizer if self.source_language == "ko" else english_tokenizer
+        )
+        target_tokenizer = (
+            korean_tokenizer if self.target_language == "ko" else english_tokenizer
+        )
+
         # tokenize
-        source_input_ids = korean_tokenizer(
+        source_input_ids = source_tokenizer(
             korean_tokenizer.cls_token + source_sent + korean_tokenizer.eos_token,
             add_special_tokens=False,
             padding="max_length",
@@ -49,7 +56,7 @@ class TranslationDataset(Dataset):
             return_token_type_ids=False,
         )["input_ids"]
 
-        target_input_ids = english_tokenizer(
+        target_input_ids = target_tokenizer(
             english_tokenizer.cls_token + target_sent + english_tokenizer.eos_token,
             add_special_tokens=False,
             padding="max_length",
@@ -85,7 +92,11 @@ class TargetDataset(Dataset):
         # get sentences
         source_sent = self.list_data[idx]
 
-        source_input_ids = korean_tokenizer(
+        source_tokenizer = (
+            korean_tokenizer if self.source_language == "ko" else english_tokenizer
+        )
+
+        source_input_ids = source_tokenizer(
             korean_tokenizer.cls_token + source_sent + korean_tokenizer.eos_token,
             add_special_tokens=False,
             padding="max_length",

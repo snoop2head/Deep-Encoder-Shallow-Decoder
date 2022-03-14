@@ -24,11 +24,8 @@ CFG:
   tgt_vocab_size: 10000
   src_language: "ko"
   tgt_language: "en"
+  load_model_name: "snoop2head/Deep-Shallow-Ko2En"
+  num_inference_sample: 500
 
   # root path
   ROOT_PATH: "."
-
-  # set best model path
-  num_inference_sample: 500
-  load_model_name: "snoop2head/Deep-Shallow-Ko2En"
-  load_model_path: "/Users/noopy/Documents/Deep-Encoder-Shallow-Decoder/models/Ko2En/best-eval-loss-model-9-epochs.pt"

@@ -18,7 +18,7 @@ import yaml
 with open("config.yaml") as infile:
     SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
     CFG = EasyDict(SAVED_CFG["CFG"])
-
+print(CFG)
 DEVICE = torch.device(
     "cuda:0" if torch.cuda.is_available() and CFG.DEBUG == False else "cpu"
 )
@@ -72,8 +72,10 @@ def inference(transformer, src_input_id):
         max_len=num_tokens_without_pad,
         start_symbol=korean_tokenizer.cls_token_id,
     ).flatten()
-
-    result = " ".join(english_tokenizer.convert_ids_to_tokens(tgt_tokens))
+    target_tokenizer = (
+        english_tokenizer if CFG.tgt_language == "en" else korean_tokenizer
+    )
+    result = " ".join(target_tokenizer.convert_ids_to_tokens(tgt_tokens))
     result = result.replace(" ##", "")
     result = result.replace("[UNK]", "")
     result = result.replace("[CLS]", "")
@@ -87,8 +89,8 @@ if __name__ == "__main__":
     list_inferenced = []
     slice_index = CFG.num_inference_sample - 1
 
-    list_test = df_test["ko"].tolist()[:slice_index]
-    list_answer = df_test["en"].tolist()[:slice_index]
+    list_test = df_test[CFG.src_language].tolist()[:slice_index]
+    list_answer = df_test[CFG.tgt_language].tolist()[:slice_index]
 
     test_dataset = TargetDataset(list_test)
 
@@ -111,11 +113,12 @@ if __name__ == "__main__":
 
     df_result = pd.DataFrame(
         {
-            "ko": list_test,
-            "pred": list_inferenced,
-            "en": list_answer,
+            "input": list_test,
+            "prediction": list_inferenced,
+            "label": list_answer,
         }
     )
     df_result.to_csv(
-        f"./data/inference_first_{CFG.num_inference_sample}.csv", index=False
+        f"./result/inference_{CFG.num_inference_sample}_samples_{CFG.src_language}_to_{CFG.tgt_language}.csv",
+        index=False,
     )
