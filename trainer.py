@@ -1,6 +1,5 @@
 from preprocess import use_dataset
-from config import DeepShallowConfig
-from model import DeepShallowModel
+from model import DeepShallowConfig, DeepShallowModel
 from metrics import AverageMetrics
 from dataset import TranslationDataset, custom_collate_fn
 

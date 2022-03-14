@@ -1,6 +1,5 @@
-from config import DeepShallowConfig
 from preprocess import use_dataset
-from model import DeepShallowModel
+from model import DeepShallowConfig, DeepShallowModel
 from trainer import generate_square_subsequent_mask
 from dataset import TargetDataset, custom_collate_inference_fn
 
@@ -18,7 +17,7 @@ import yaml
 with open("config.yaml") as infile:
     SAVED_CFG = yaml.load(infile, Loader=yaml.FullLoader)
     CFG = EasyDict(SAVED_CFG["CFG"])
-print(CFG)
+
 DEVICE = torch.device(
     "cuda:0" if torch.cuda.is_available() and CFG.DEBUG == False else "cpu"
 )

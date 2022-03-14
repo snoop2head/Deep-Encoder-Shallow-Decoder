@@ -19,7 +19,7 @@ Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org
 
 ```python
 from transformers import PreTrainedTokenizerFast
-from model import DeepShallowModel, DeepShallowConfig
+from model import DeepShallowConfig, DeepShallowModel
 
 # source and target tokenizer
 korean_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-Ko")
