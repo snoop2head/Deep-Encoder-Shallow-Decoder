@@ -18,13 +18,17 @@ Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org
 from transformers import PreTrainedTokenizerFast
 from model import DeepShallowModel, DeepShallowConfig
 
-# pretrained config and model
-config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
-model = DeepShallowModel.from_pretrained("snoop2head/Deep-Shallow-Ko2En") # or "snoop2head/Deep-Shallow-En2Ko"
-
 # source and target tokenizer
 korean_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-Ko")
 english_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-En")
+
+# Korean(source) -> English(target) translation with pretrained model
+config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-Ko2En")
+model = DeepShallowModel(config)
+
+# English(source) -> Korean(target) translation with pretrained model
+config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-En2Ko") 
+model = DeepShallowModel(config)
 ```
 
 | Model Hyperparameter                  | Value |
