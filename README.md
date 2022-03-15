@@ -14,29 +14,6 @@ Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org
 
 ## Quickstart
 
-### Installation
-
-```shell
-git clone https://github.com/snoop2head/Deep-Encoder-Shallow-Decoder
-cd Deep-Encoder-Shallow-Decoder
-pip install -r requirements.txt
-```
-
-### Run
-
-Manipulate [config.yaml](https://github.com/snoop2head/Deep-Encoder-Shallow-Decoder/blob/main/config.yaml) for source language & target langauge setting or number of inference sample for the output.
-
-```shell
-python inference.py # for translation output on result folder
-python metrics.py # for bleu score calculation based on output
-```
-
-For customized training, change arguments in [config.yaml](https://github.com/snoop2head/Deep-Encoder-Shallow-Decoder/blob/main/config.yaml).
-
-```shell
-python train.py # trains with arguments on config.yaml
-```
-
 ### Use with Huggingface
 
 ```python
@@ -55,6 +32,22 @@ model = DeepShallowModel.from_pretrained("snoop2head/Deep-Shallow-Ko2En", config
 config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-En2Ko")
 model = DeepShallowModel.from_pretrained("snoop2head/Deep-Shallow-En2Ko", config=config)
 ```
+
+### Use with cloned repository
+
+Manipulate [config.yaml](https://github.com/snoop2head/Deep-Encoder-Shallow-Decoder/blob/main/config.yaml) for source language & target langauge setting or number of inference sample for the output.
+
+```shell
+python inference.py # creates translation output as csv file on result folder
+python metrics.py # calculates bleu score based on csv output from inference.py
+```
+
+For customized training, change arguments in [config.yaml](https://github.com/snoop2head/Deep-Encoder-Shallow-Decoder/blob/main/config.yaml).
+
+```shell
+python train.py # trains with arguments on config.yaml
+```
+
 
 ## Model
 
