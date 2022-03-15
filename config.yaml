@@ -25,7 +25,7 @@ CFG:
   src_language: "ko"
   tgt_language: "en"
   load_model_name: "snoop2head/Deep-Shallow-Ko2En"
-  num_inference_sample: 500
+  num_inference_sample: 5000
 
   # root path
   ROOT_PATH: "."

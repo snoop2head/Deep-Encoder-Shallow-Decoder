@@ -12,14 +12,36 @@ Minimal Implementation of Paper [Deep Encoder Shallow Decoder](https://arxiv.org
 
 \*\*Tested with `2.4 GHz 8-Core Intel Core i9`
 
-## Model
+## Quickstart
 
-- Sequence to Sequence Transformer model using [nn.Transformer](https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html)
-- Packaged with Huggingface PretrainedModel Class
+### Installation
+
+```shell
+git clone https://github.com/snoop2head/Deep-Encoder-Shallow-Decoder
+cd Deep-Encoder-Shallow-Decoder
+pip install -r requirements.txt
+```
+
+### Run
+
+Manipulate [config.yaml](https://github.com/snoop2head/Deep-Encoder-Shallow-Decoder/blob/main/config.yaml) for source language & target langauge setting or number of inference sample for the output.
+
+```shell
+python inference.py # for translation output on result folder
+python metrics.py # for bleu score calculation based on output
+```
+
+For customized training, change arguments in [config.yaml](https://github.com/snoop2head/Deep-Encoder-Shallow-Decoder/blob/main/config.yaml).
+
+```shell
+python train.py # trains with arguments on config.yaml
+```
+
+### Use with Huggingface
 
 ```python
 from transformers import PreTrainedTokenizerFast
-from model import DeepShallowConfig, DeepShallowModel
+from model import DeepShallowConfig, DeepShallowModel # fetch from model.py file
 
 # source and target tokenizer
 korean_tokenizer = PreTrainedTokenizerFast.from_pretrained("snoop2head/Deep-Shallow-Ko")
@@ -33,6 +55,8 @@ model = DeepShallowModel.from_pretrained("snoop2head/Deep-Shallow-Ko2En", config
 config = DeepShallowConfig.from_pretrained("snoop2head/Deep-Shallow-En2Ko")
 model = DeepShallowModel.from_pretrained("snoop2head/Deep-Shallow-En2Ko", config=config)
 ```
+
+## Model
 
 | Model Hyperparameter                  | Value |
 | ------------------------------------- | ----- |
