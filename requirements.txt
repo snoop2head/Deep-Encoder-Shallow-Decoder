@@ -1,8 +1,8 @@
-torch==1.10.0
+torch>=1.10.0
 transformers==4.17.0
 datasets==1.18.4
 pandas
 numpy
 wandb
-yaml
+PyYAML
 easydict
