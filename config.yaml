@@ -27,5 +27,15 @@ CFG:
   load_model_name: "snoop2head/Deep-Shallow-Ko2En"
   num_inference_sample: 5000
 
+  # transformer settings
+  emb_size: 512
+  attention_heads: 8
+  ffn_hid_dim: 2048
+  encoder_layers: 12
+  decoder_layers: 1
+  is_encoder_decoder: true
+  activation_function: "gelu"
+  dropout: 0.1
+
   # root path
   ROOT_PATH: "."
