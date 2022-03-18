@@ -8,8 +8,9 @@ import torch
 import torch.nn as nn
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from transformers import PreTrainedTokenizerFast, get_cosine_schedule_with_warmup
+import wandb
 
 from easydict import EasyDict
 import yaml
@@ -54,6 +55,13 @@ def create_mask(src, tgt):
 
 
 if __name__ == "__main__":
+
+    wandb.init(
+        project=CFG.project_name, 
+        name=CFG.run_name,
+        config=CFG
+    )
+
     # prevent possible OOM error
     try:
         if transformer:
@@ -183,14 +191,14 @@ if __name__ == "__main__":
                     "Dev Loss: {:.4f}".format(eval_loss.avg),
                 )
 
-                # wandb.log(
-                #     {
-                #         'train/loss':train_loss.avg,
-                #         'train/learning_rate':optimizer.param_groups[0]['lr'],
-                #         'eval/loss':eval_loss.avg,
-                #         'Step':num_steps
-                #     }
-                # )
+                wandb.log(
+                    {
+                        'train/loss':train_loss.avg,
+                        'train/learning_rate':optimizer.param_groups[0]['lr'],
+                        'eval/loss':eval_loss.avg,
+                        'Step':num_steps
+                    }
+                )
 
                 if best_eval_loss > eval_loss.avg:
                     best_eval_loss = eval_loss.avg
@@ -203,7 +211,7 @@ if __name__ == "__main__":
                             best_eval_loss
                         )
                     )
-                    # wandb.log({'best_eval_loss':best_eval_loss})
+                    wandb.log({'best_eval_loss':best_eval_loss})
 
                 # reset metrics
                 eval_loss.reset()
