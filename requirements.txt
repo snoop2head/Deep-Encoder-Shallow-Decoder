@@ -6,3 +6,4 @@ numpy
 wandb
 PyYAML
 easydict
+nltk
