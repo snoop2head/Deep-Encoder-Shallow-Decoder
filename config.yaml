@@ -31,11 +31,15 @@ CFG:
   emb_size: 512
   attention_heads: 8
   ffn_hid_dim: 2048
-  encoder_layers: 12
-  decoder_layers: 1
+  encoder_layers: 12 # default is 12
+  decoder_layers: 1 # default is 1
   is_encoder_decoder: true
   activation_function: "gelu"
   dropout: 0.1
+
+  # wandb settings
+  project_name: "NMT-Translation"
+  run_name: "Seq2Seq-Transformer-Huggingface-En2Ko"
 
   # root path
   ROOT_PATH: "."

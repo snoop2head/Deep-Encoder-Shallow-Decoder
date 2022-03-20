@@ -48,7 +48,6 @@ For customized training, change arguments in [config.yaml](https://github.com/sn
 python train.py # trains with arguments on config.yaml
 ```
 
-
 ## Model
 
 | Model Hyperparameter                  | Value |
@@ -111,6 +110,7 @@ Maximum Token Length was selected as 62 which is 95% percentile of the target da
 - [x] Make Machine Translation Model class similar to MarianMTModel in order to be trainable with huggingface trainer.
 - [x] Get BLEU score from the test set.
 - [ ] Compare BLEU score from Google Translate, Papago, [Pororo](https://kakaobrain.github.io/pororo/seq2seq/mt.html) on the test set(or test set which is out of domain).
+- [ ] Enable batch inferencing on GPU
 - [ ] For tasks such as Named Entity Relation or Relation Extraction, enable entity marker to wrap around even after translation
 
 ## Citation

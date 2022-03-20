@@ -5,3 +5,5 @@ __pycache__
 *.ipynb
 _clones/*
 result/inference_first_5000.csv
+wandb
+runs
