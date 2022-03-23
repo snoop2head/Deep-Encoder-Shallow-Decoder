@@ -112,6 +112,7 @@ Maximum Token Length was selected as 62 which is 95% percentile of the target da
 - [ ] Compare BLEU score from Google Translate, Papago, [Pororo](https://kakaobrain.github.io/pororo/seq2seq/mt.html) on the test set(or test set which is out of domain).
 - [ ] Enable batch inferencing on GPU
 - [ ] For tasks such as Named Entity Relation or Relation Extraction, enable entity marker to wrap around even after translation
+- [ ] Inference with Beam Search
 
 ## Citation
 
